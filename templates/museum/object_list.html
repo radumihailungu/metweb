@@ -1,0 +1,86 @@
+{% extends "museum/base.html" %}
+{% block title %}MMA Collection{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h2>The Metropolitan Museum of Art Collection</h2>
+      <p>The Metropolitan Museum of Art: răsfoiește colecția de opere de artă și descoperă lucrări din toate perioadele și departamentele.</p>
+    </div>
+
+    <form class="searchbar" method="get">
+      <input class="input" type="text" name="q" value="{{ q }}" placeholder="Caută (titlu, artist, departament...)">
+
+      <select class="select" name="per_page">
+        <option value="12" {% if per_page == 12 %}selected{% endif %}>12 / pagină</option>
+        <option value="24" {% if per_page == 24 %}selected{% endif %}>24 / pagină</option>
+        <option value="48" {% if per_page == 48 %}selected{% endif %}>48 / pagină</option>
+      </select>
+
+      {# ====== FILTRU (dropdown) ====== #}
+      <select class="select" name="filter_field" onchange="this.form.submit()">
+        <option value="">Filter: fără</option>
+        {% for key, label in FILTER_FIELDS.items %}
+          <option value="{{ key }}" {% if filter_field == key %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <select class="select" name="filter_value" {% if not filter_field %}disabled{% endif %}>
+        <option value="">Valoare: alege</option>
+        {% for v in filter_values %}
+          <option value="{{ v }}">
+            {% if v|length > 60 %}{{ v|slice:":60" }}…{% else %}{{ v }}{% endif %}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button class="button" type="submit">Aplică</button>
+
+      {% if filter_field and filter_value %}
+        <a class="button" href="?q={{ q|urlencode }}&per_page={{ per_page }}">Reset</a>
+      {% endif %}
+    </form>
+  </section>
+
+  <section class="gallery">
+    {% for obj in page_obj %}
+      <a class="card" href="{% url 'object_detail' obj.id %}">
+        <div class="frame">
+          <div class="frame-inner">
+            {% if obj.image_data_uri %}
+              <img src="{{ obj.image_data_uri }}" alt="{{ obj.title|default:'Artwork' }}">
+            {% else %}
+              <div class="noimg">Fără imagine</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="meta">
+          <div class="title">{{ obj.title|default:"(Fără titlu)" }}</div>
+          <div class="sub">
+            {{ obj.artist|default:"Artist necunoscut" }}
+          </div>
+
+          <div class="badges">
+            {% if obj.department %}<span class="badge">{{ obj.department }}</span>{% endif %}
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </section>
+
+  <div class="pagination">
+    <div class="info">
+      Pagina {{ page_obj.number }} din {{ page_obj.paginator.num_pages }} • rezultate: {{ page_obj.paginator.count }}
+    </div>
+
+    <div class="pager">
+      {% if page_obj.has_previous %}
+        <a href="?q={{ q|urlencode }}&per_page={{ per_page }}&filter_field={{ filter_field|urlencode }}&filter_value={{ filter_value|urlencode }}&page={{ page_obj.previous_page_number }}">← Prev</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?q={{ q|urlencode }}&per_page={{ per_page }}&filter_field={{ filter_field|urlencode }}&filter_value={{ filter_value|urlencode }}&page={{ page_obj.next_page_number }}">Next →</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

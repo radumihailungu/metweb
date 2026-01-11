@@ -1,0 +1,68 @@
+{% extends "museum/base.html" %}
+{% block title %}{{ obj.title|default:"Detalii" }} • Met{% endblock %}
+
+{% block content %}
+  <a class="pill" href="{% url 'object_list' %}">← Înapoi la galerie</a>
+
+  <section class="detail">
+    <div class="detail-card">
+      <div class="detail-header">
+        <h2>{{ obj.title|default:"(Fără titlu)" }}</h2>
+        <p>{{ obj.artist|default:"Artist necunoscut" }} • {{ obj.department|default:"" }}</p>
+      </div>
+
+      <div class="detail-body">
+        <div class="kv">
+          <div class="k">Artist</div>
+          <div class="v">{{ obj.data.artistDisplayName|default:"—" }}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Departament</div>
+          <div class="v">{{ obj.data.department|default:"—" }}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Clasificare</div>
+          <div class="v">{{ obj.data.classification|default:"—" }}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Cultură</div>
+          <div class="v">{{ obj.data.culture|default:"—" }}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Tip obiect</div>
+          <div class="v">{{ obj.data.objectName|default:"—" }}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Material / tehnică</div>
+          <div class="v">{{ obj.data.medium|default:"—" }}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Dată / perioadă</div>
+          <div class="v">{{ obj.data.objectDate|default:"—" }}</div>
+        </div>
+        {% if obj.data.objectURL %}
+          <div class="kv">
+            <div class="k">Link</div>
+            <div class="v"><a class="pill" href="{{ obj.data.objectURL }}" target="_blank">Deschide pagina oficială</a></div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="jsonbox">
+        {{ obj.data|safe }}
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-frame frame">
+        <div class="frame-inner">
+          {% if obj.image_data_uri %}
+            <img src="{{ obj.image_data_uri }}" alt="{{ obj.title|default:'Artwork' }}">
+          {% else %}
+            <div class="noimg">Fără imagine</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
