@@ -1,8 +1,7 @@
 from django import forms
 from .models import ArtObject
 
-# ============ CONFIG ============
-# dropdowns
+# dropdown
 CHOICE_KEYS = [
     "department",
     "classification",
@@ -42,7 +41,7 @@ def distinct_json_values(json_key: str):
     )
     return [v.strip() for v in qs if isinstance(v, str) and v.strip()]
 
-
+# creeam model
 class ArtObjectAdminForm(forms.ModelForm):
     title = forms.CharField(max_length=255, required=False, label=LABELS["title"])
     artistDisplayName = forms.CharField(max_length=255, required=False, label=LABELS["artistDisplayName"])
@@ -52,10 +51,10 @@ class ArtObjectAdminForm(forms.ModelForm):
     region = forms.CharField(max_length=255, required=False, label=LABELS["region"])
     city = forms.CharField(max_length=255, required=False, label=LABELS["city"])
     creditLine = forms.CharField(max_length=500, required=False, label=LABELS["creditLine"])
+
     objectURL = forms.URLField(required=False, label=LABELS["objectURL"])
+
     department = forms.ChoiceField(required=False, label=LABELS["department"], choices=[])
-
-
     classification = forms.ChoiceField(required=False, label=LABELS["classification"], choices=[])
     objectName = forms.ChoiceField(required=False, label=LABELS["objectName"], choices=[])
     medium = forms.ChoiceField(required=False, label=LABELS["medium"], choices=[])
@@ -69,8 +68,8 @@ class ArtObjectAdminForm(forms.ModelForm):
     )
 
     class Meta:
-        model = ArtObject
-        fields = []  # nu editez direct JSON
+        model = ArtObject # legatura model cu tabelul
+        fields = []  # nu afisam niciun camp din model
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

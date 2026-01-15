@@ -12,7 +12,6 @@ class ArtObjectAdmin(admin.ModelAdmin):
     search_fields = ("data__title", "data__artistDisplayName", "data__department", "data__classification")
     list_per_page = 25
 
-    # Grupăm câmpurile pe secțiuni (super user-friendly)
     fieldsets = (
         ("Informații principale", {
             "fields": ("title", "artistDisplayName", "department", "classification", "culture")
@@ -31,6 +30,7 @@ class ArtObjectAdmin(admin.ModelAdmin):
         }),
     )
 
+    #extragere date din json
     def title_col(self, obj):
         return (obj.data or {}).get("title", "")
     title_col.short_description = "Title"

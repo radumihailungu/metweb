@@ -1,5 +1,5 @@
 from django.db import models
-
+    # tabel
 class ArtObject(models.Model):
     data = models.JSONField()
 
@@ -7,7 +7,7 @@ class ArtObject(models.Model):
     class Meta:
         db_table = "data"
 
-    #creeam functii ca sa le apelam usor pt datele din db
+    # functii coloane tabel
     @property
     def title(self):
         return self.data.get("title", "")
